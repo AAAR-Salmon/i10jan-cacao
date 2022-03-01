@@ -1,13 +1,22 @@
 import type { NextPage } from 'next';
-import { Container } from 'react-bootstrap';
-import { Footer } from '../components/Footer';
-import { Header } from '../components/Header';
+import Head from 'next/head';
+import { Button, Container } from 'react-bootstrap';
 
 const Home: NextPage = () => {
   return (
-    <Container fluid='md'>
-      <p>あああ</p>
-    </Container>
+    <>
+      <Head>
+        <title>i10jan-cacao</title>
+      </Head>
+      <Container fluid='md' className='d-flex flex-column justify-content-center'>
+        <p className='text-center fs-2'>誰か いる？</p>
+        <div className='d-flex justify-content-center'>
+          <Button href='someone' className='d-block'>
+            確認
+          </Button>
+        </div>
+      </Container>
+    </>
   );
 };
 
