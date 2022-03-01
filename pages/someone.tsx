@@ -1,29 +1,26 @@
+import fetch from 'node-fetch';
 import type { GetServerSideProps, NextPage } from 'next';
 import Head from 'next/head';
-import { Button, Container } from 'react-bootstrap';
+import { Container } from 'react-bootstrap';
 
 type Props = {
+  successFetch: boolean;
   countInRoom: number;
-};
-
-export const getServerSideProps: GetServerSideProps<Props> = async (context) => {
-  return {
-    props: {
-      countInRoom: 0,
-    },
-  };
 };
 
 const SomeonePage: NextPage<Props> = (props) => {
   return (
     <>
       <Head>
-        <title>{props.countInRoom > 0 ? 'いた！' : '誰もいない'} | i10jan-cacao</title>
+        <title>
+          {!props.successFetch ? '通信失敗' : props.countInRoom > 0 ? 'いた！' : '誰もいない'} | i10jan-cacao
+        </title>
       </Head>
       <Container fluid='md' className='d-flex flex-column justify-content-center'>
-        <p className='text-center fs-2'>{props.countInRoom}人いる！</p>
+        <p className='text-center fs-2'>{props.successFetch ? `${props.countInRoom}人いる！` : '通信失敗…'}</p>
         <p className='text-center'>
-          {((n: number) => {
+          {((ok: boolean, n: number) => {
+            if (!ok) return '悲しい';
             if (n < 0) {
               const decoder = new TextDecoder('utf-8');
               const data = [
@@ -35,7 +32,7 @@ const SomeonePage: NextPage<Props> = (props) => {
             if (n === 0) return 'あなたが1番乗り？';
             if (n < 10) return '来て来て 部室';
             return 'ちょっと多すぎるかもよ';
-          })(props.countInRoom)}
+          })(props.successFetch, props.countInRoom)}
         </p>
       </Container>
     </>
@@ -43,3 +40,32 @@ const SomeonePage: NextPage<Props> = (props) => {
 };
 
 export default SomeonePage;
+
+export const getServerSideProps: GetServerSideProps<Props> = (context) => {
+  const promise = fetch('https://cacao-app.com/api/active', {
+    headers: {
+      'X-Access-Token': process.env.CACAO_API_TOKEN as string,
+    },
+  });
+  return promise
+    .then((response) => {
+      if (!response.ok) throw response.status;
+      return response.json();
+    })
+    .then((json) => {
+      return {
+        props: {
+          successFetch: (json as any).success,
+          countInRoom: (json as any).data.length,
+        },
+      };
+    })
+    .catch((_) => {
+      return {
+        props: {
+          successFetch: false,
+          countInRoom: 0,
+        },
+      };
+    });
+};
