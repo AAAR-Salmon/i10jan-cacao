@@ -4,9 +4,9 @@ import { Header } from './Header';
 
 export const Layout = ({ children }: { children: ReactNode }) => {
   return (
-    <div className='d-flex flex-column' style={{ minHeight: '100vh' }}>
+    <div className='d-flex flex-column min-vh-100'>
       <Header />
-      <main className='flex-fill'>{children}</main>
+      <main className='flex-fill d-flex'>{children}</main>
       <Footer />
     </div>
   );
