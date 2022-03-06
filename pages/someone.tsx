@@ -43,7 +43,7 @@ export default SomeonePage;
 export const getServerSideProps: GetServerSideProps<Props> = (context) => {
   const promise = fetch('https://cacao-app.com/api/active', {
     headers: {
-      'X-Access-Token': process.env.CACAO_API_TOKEN as string,
+      'X-Access-Token': process.env.CACAO_API_TOKEN!,
     },
   });
   return promise
