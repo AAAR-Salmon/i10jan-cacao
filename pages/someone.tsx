@@ -1,11 +1,8 @@
-import type { GetServerSideProps, NextPage } from 'next';
+import type { InferGetServerSidePropsType, NextPage } from 'next';
 import Head from 'next/head';
 import { Container } from 'react-bootstrap';
 
-type Props = {
-  successFetch: boolean;
-  countInRoom: number;
-};
+type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
 
 const flavorText = (ok: boolean, n: number) => {
   if (!ok) return '悲しい';
@@ -39,8 +36,8 @@ const SomeonePage: NextPage<Props> = (props) => {
 
 export default SomeonePage;
 
-export const getServerSideProps: GetServerSideProps<Props> = (context) => {
   const promise = fetch('https://cacao-app.com/api/active', {
+export const getServerSideProps = async () => {
     headers: {
       'X-Access-Token': process.env.CACAO_API_TOKEN!,
     },
