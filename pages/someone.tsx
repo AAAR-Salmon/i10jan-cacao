@@ -1,4 +1,3 @@
-import fetch from 'node-fetch';
 import type { GetServerSideProps, NextPage } from 'next';
 import Head from 'next/head';
 import { Container } from 'react-bootstrap';
@@ -54,8 +53,8 @@ export const getServerSideProps: GetServerSideProps<Props> = (context) => {
     .then((json) => {
       return {
         props: {
-          successFetch: (json as any).success,
-          countInRoom: (json as any).data.length,
+          successFetch: json.success,
+          countInRoom: json.data.length,
         },
       };
     })
