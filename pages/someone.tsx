@@ -4,20 +4,6 @@ import { Container } from 'react-bootstrap';
 
 type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
 
-const flavorText = (ok: boolean, n: number) => {
-  if (!ok) return '悲しい';
-  if (n < 0) {
-    const decoder = new TextDecoder('utf-8');
-    const data = [
-      0xbbef, 0xe8bf, 0xa38b, 0x8eee, 0xeb84, 0x8182, 0x87e8, 0xeea3, 0xaa8e, 0x92e8, 0xeb81, 0xafb3, 0xaae0, 0x009f,
-    ];
-    return decoder.decode(Uint16Array.from(data).buffer);
-  }
-  if (n === 0) return 'あなたが1番乗り？';
-  if (n < 10) return '来て来て 部室';
-  return 'ちょっと多すぎるかもよ';
-};
-
 const SomeonePage: NextPage<Props> = (props) => {
   return (
     <>
@@ -62,4 +48,18 @@ export const getServerSideProps = async () => {
         },
       };
     });
+};
+
+const flavorText = (success: boolean, countInRoom: number) => {
+  if (!success) return '悲しい';
+  if (countInRoom < 0) {
+    const decoder = new TextDecoder('utf-8');
+    const data = [
+      0xbbef, 0xe8bf, 0xa38b, 0x8eee, 0xeb84, 0x8182, 0x87e8, 0xeea3, 0xaa8e, 0x92e8, 0xeb81, 0xafb3, 0xaae0, 0x009f,
+    ];
+    return decoder.decode(Uint16Array.from(data).buffer);
+  }
+  if (countInRoom === 0) return 'あなたが1番乗り？';
+  if (countInRoom < 8) return '来て来て 部室';
+  return 'ちょっと多すぎるかもよ';
 };
