@@ -36,14 +36,13 @@ const SomeonePage: NextPage<Props> = (props) => {
 
 export default SomeonePage;
 
-  const promise = fetch('https://cacao-app.com/api/active', {
 export const getServerSideProps = async () => {
+  return fetch('https://cacao-app.com/api/active', {
     headers: {
       'X-Access-Token': process.env.CACAO_API_TOKEN!,
     },
-  });
-  return promise
-    .then((response) => {
+  })
+    .then<{ success: boolean; data: any[] }>((response) => {
       if (!response.ok) throw response.status;
       return response.json();
     })
